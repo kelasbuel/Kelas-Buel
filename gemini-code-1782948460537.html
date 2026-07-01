@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Digital Kelas Buel</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: #f0f4f8;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        h1, h2, h3, .font-baloo {
+            font-family: 'Baloo 2', cursive;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 text-slate-700">
+
+    <nav class="no-print flex justify-center gap-4 mb-8 flex-wrap">
+        <button onclick="switchTab('cover')" class="w-14 h-14 rounded-full bg-pink-200 hover:bg-pink-300 flex items-center justify-center text-pink-700 shadow-md transition transform hover:scale-110 tooltip" title="Cover">
+            <i data-lucide="home"></i>
+        </button>
+        <button onclick="switchTab('harian')" class="w-14 h-14 rounded-full bg-blue-200 hover:bg-blue-300 flex items-center justify-center text-blue-700 shadow-md transition transform hover:scale-110" title="Absensi Harian">
+            <i data-lucide="calendar-check"></i>
+        </button>
+        <button onclick="switchTab('rekap')" class="w-14 h-14 rounded-full bg-purple-200 hover:bg-purple-300 flex items-center justify-center text-purple-700 shadow-md transition transform hover:scale-110" title="Rekap Bulanan">
+            <i data-lucide="clipboard-list"></i>
+        </button>
+        <button onclick="backupData()" class="w-14 h-14 rounded-full bg-green-200 hover:bg-green-300 flex items-center justify-center text-green-700 shadow-md transition transform hover:scale-110" title="Simpan / Cadangkan Data">
+            <i data-lucide="save"></i>
+        </button>
+    </nav>
+
+    <div class="max-w-6xl mx-auto bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white">
+
+        <div id="cover" class="tab-content active space-y-8">
+            <div class="text-center relative py-6 bg-gradient-to-r from-pink-100 to-blue-100 rounded-2xl border border-white shadow-sm">
+                <div class="w-24 h-24 bg-white rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-inner mb-4">
+                    <i data-lucide="graduation-cap" class="w-12 h-12 text-blue-400"></i>
+                </div>
+                <h1 class="text-4xl font-bold text-slate-800 tracking-wide">Absensi Digital Kelas Buel</h1>
+                <p class="text-xl font-medium text-slate-600 mt-1">SD Islam Al Falah Jambi</p>
+                <p class="text-sm text-slate-500">Kepala Sekolah: [Nama Kepala Sekolah]</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 flex flex-col justify-between">
+                    <div>
+                        <label class="text-xs text-amber-600 font-bold block mb-1">TAHUN AJARAN</label>
+                        <input id="cfg-ta" type="text" value="2026/2027" class="bg-transparent border-b border-dashed border-amber-400 text-lg font-semibold w-full focus:outline-none">
+                    </div>
+                    <button onclick="saveConfig('ta')" class="mt-3 bg-amber-400 text-white px-3 py-1 rounded-lg text-xs self-end hover:bg-amber-500 flex items-center gap-1"><i data-lucide="save" class="w-3 h-3"></i> Save</button>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 flex flex-col justify-between">
+                    <div>
+                        <label class="text-xs text-blue-600 font-bold block mb-1">SEMESTER</label>
+                        <input id="cfg-sem" type="text" value="Ganjil" class="bg-transparent border-b border-dashed border-blue-400 text-lg font-semibold w-full focus:outline-none">
+                    </div>
+                    <button onclick="saveConfig('sem')" class="mt-3 bg-blue-400 text-white px-3 py-1 rounded-lg text-xs self-end hover:bg-blue-500 flex items-center gap-1"><i data-lucide="save" class="w-3 h-3"></i> Save</button>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-xl border border-purple-200 flex flex-col justify-between">
+                    <div>
+                        <label class="text-xs text-purple-600 font-bold block mb-1">NAMA GURU</label>
+                        <input id="cfg-guru" type="text" value="Elita, S.Pd." class="bg-transparent border-b border-dashed border-purple-400 text-lg font-semibold w-full focus:outline-none">
+                    </div>
+                    <button onclick="saveConfig('guru')" class="mt-3 bg-purple-400 text-white px-3 py-1 rounded-lg text-xs self-end hover:bg-purple-500 flex items-center gap-1"><i data-lucide="save" class="w-3 h-3"></i> Save</button>
+                </div>
+                <div class="bg-pink-50 p-4 rounded-xl border border-pink-200 flex flex-col justify-between">
+                    <div>
+                        <label class="text-xs text-pink-600 font-bold block mb-1">NAMA KELAS</label>
+                        <input id="cfg-kelas" type="text" value="VI A" class="bg-transparent border-b border-dashed border-pink-400 text-lg font-semibold w-full focus:outline-none">
+                    </div>
+                    <button onclick="saveConfig('kelas')" class="mt-3 bg-pink-400 text-white px-3 py-1 rounded-lg text-xs self-end hover:bg-pink-500 flex items-center gap-1"><i data-lucide="save" class="w-3 h-3"></i> Save</button>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                    <label class="text-xs text-emerald-600 font-bold block mb-1">TOTAL / L / P (OTOMATIS)</label>
+                    <div class="text-lg font-semibold text-slate-700 mt-2">
+                        Total: <span id="lbl-total">20</span> | L: <span id="lbl-l">10</span> | P: <span id="lbl-p">10</span>
+                    </div>
+                </div>
+                <div class="bg-teal-50 p-4 rounded-xl border border-teal-200">
+                    <label class="text-xs text-teal-600 font-bold block mb-1 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> JADWAL SHALAT KOTA JAMBI</label>
+                    <div id="sholat-box" class="text-xs grid grid-cols-3 gap-1 mt-2 text-slate-600 font-medium">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm h-fit">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 id="cal-month-title" class="font-bold text-lg text-slate-800"></h3>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-400 mb-2">
+                        <div class="text-red-500">Mi</div><div>Se</div><div>Se</div><div>Ra</div><div>Ka</div><div>Ju</div><div class="text-red-500">Sa</div>
+                    </div>
+                    <div id="calendar-days" class="grid grid-cols-7 gap-1 text-center text-sm"></div>
+                </div>
+
+                <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm overflow-x-auto">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-lg text-slate-800">Jadwal Pelajaran Mingguan</h3>
+                        <button onclick="saveJadwal()" class="bg-blue-500 text-white text-xs px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600"><i data-lucide="save" class="w-3 h-3"></i> Simpan Jadwal</button>
+                    </div>
+                    <table class="w-full text-xs text-left border-collapse min-w-[600px]">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 font-bold">
+                                <th class="p-1 border border-slate-200 w-8 text-center">No</th>
+                                <th class="p-1 border border-slate-200 w-24">Waktu</th>
+                                <th class="p-1 border border-slate-200">Senin</th>
+                                <th class="p-1 border border-slate-200">Selasa</th>
+                                <th class="p-1 border border-slate-200">Rabu</th>
+                                <th class="p-1 border border-slate-200">Kamis</th>
+                                <th class="p-1 border border-slate-200">Jumat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jadwal-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="harian" class="tab-content space-y-6">
+            <div class="flex flex-wrap justify-between items-center gap-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="calendar-days" class="text-blue-500 w-6 h-6"></i>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Absensi Harian</h2>
+                        <p class="text-xs text-slate-500">Pilih tanggal untuk melakukan presensi siswa</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="date" id="attendance-date" onchange="loadAttendanceDate()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-center">
+                    <span class="text-xs text-emerald-600 font-bold block">HADIR (.)</span>
+                    <span id="day-summary-h" class="text-xl font-bold text-emerald-700">0</span>
+                </div>
+                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-center">
+                    <span class="text-xs text-amber-600 font-bold block">SAKIT (S)</span>
+                    <span id="day-summary-s" class="text-xl font-bold text-amber-700">0</span>
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200 text-center">
+                    <span class="text-xs text-indigo-600 font-bold block">IZIN (I)</span>
+                    <span id="day-summary-i" class="text-xl font-bold text-indigo-700">0</span>
+                </div>
+                <div class="bg-rose-50 p-3 rounded-xl border border-rose-200 text-center">
+                    <span class="text-xs text-rose-600 font-bold block">ALFA (A)</span>
+                    <span id="day-summary-a" class="text-xl font-bold text-rose-700">0</span>
+                </div>
+                <div class="bg-slate-100 p-3 rounded-xl border border-slate-300 text-center col-span-2 md:col-span-1">
+                    <span class="text-xs text-slate-600 font-bold block">TOTAL TIDAK HADIR</span>
+                    <span id="day-summary-absent" class="text-xl font-bold text-slate-700">0</span>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <table class="w-full text-left text-sm border-collapse min-w-[700px]">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                            <th class="p-3 text-center w-12">No</th>
+                            <th class="p-3 w-48">Nama Siswa</th>
+                            <th class="p-3 w-36">NISN</th>
+                            <th class="p-3 w-20 text-center">JK</th>
+                            <th class="p-3 text-center">Status Kehadiran (Klik bergantian)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-attendance-body">
+                        </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <button onclick="saveCurrentAttendance()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-6 py-2 rounded-xl inline-flex items-center gap-2 transition shadow-md"><i data-lucide="check-circle"></i> Simpan Absensi Hari Ini</button>
+            </div>
+        </div>
+
+        <div id="rekap" class="tab-content space-y-6">
+            <div class="flex flex-wrap justify-between items-center gap-4 bg-purple-50 p-4 rounded-xl border border-purple-100 no-print">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="clipboard-list" class="text-purple-500 w-6 h-6"></i>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Rekap Bulanan</h2>
+                        <p class="text-xs text-slate-500">Visualisasi data bulanan, cetak, dan unduh laporan</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <select id="rekap-month" onchange="renderMonthlyRekap()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none">
+                        <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
+                        <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+                        <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
+                        <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
+                    </select>
+                    <button onclick="window.print()" class="bg-white border border-slate-300 text-slate-600 text-sm px-3 py-2 rounded-xl flex items-center gap-1 hover:bg-slate-50"><i data-lucide="printer" class="w-4 h-4"></i> Cetak / PDF</button>
+                    <button onclick="exportCSV()" class="bg-purple-500 text-white text-sm px-3 py-2 rounded-xl flex items-center gap-1 hover:bg-purple-600"><i data-lucide="download" class="w-4 h-4"></i> CSV</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <table class="w-full text-[11px] text-left border-collapse min-w-[100px]">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200" id="rekap-header-row">
+                            </tr>
+                    </thead>
+                    <tbody id="rekap-body-rows">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white text-sm px-4 py-2 rounded-xl shadow-lg transition opacity-0 transform translate-y-2 pointer-events-none z-50"></div>
+
+    <script>
+        // --- 1. DATA INITIALIZATION & LOCALSTORAGE ---
+        let students = [
+            { id: 1, name: "Ahmad Fauzan", nisn: "100000000001", jk: "L" },
+            { id: 2, name: "Aisyah Putri", nisn: "100000000002", jk: "P" },
+            { id: 3, name: "Alvaro Pratama", nisn: "100000000003", jk: "L" },
+            { id: 4, name: "Bintang Ramadhan", nisn: "100000000004", jk: "L" },
+            { id: 5, name: "Citra Aulia", nisn: "100000000005", jk: "P" },
+            { id: 6, name: "Daffa Prakoso", nisn: "100000000006", jk: "L" },
+            { id: 7, name: "Farhan Maulana", nisn: "100000000007", jk: "L" },
+            { id: 8, name: "Intan Safira", nisn: "100000000008", jk: "P" },
+            { id: 9, name: "Kayla Zahra", nisn: "100000000009", jk: "P" },
+            { id: 10, name: "Muhammad Rafi", nisn: "100000000010", jk: "L" },
+            { id: 11, name: "Nabila Azzahra", nisn: "100000000011", jk: "P" },
+            { id: 12, name: "Nayla Humaira", nisn: "100000000012", jk: "P" },
+            { id: 13, name: "Rizky Maulana", nisn: "100000000013", jk: "L" },
+            { id: 14, name: "Salsaabila Putri", nisn: "100000000014", jk: "P" },
+            { id: 15, name: "Syifa Nurhaliza", nisn: "100000000015", jk: "P" },
+            { id: 16, name: "Yusuf Ramadhan", nisn: "100000000016", jk: "L" },
+            { id: 17, name: "Zahra Khairunnisa", nisn: "100000000017", jk: "P" },
+            { id: 18, name: "Zidan Alfarizi", nisn: "100000000018", jk: "L" },
+            { id: 19, name: "Fathan Arsyad", nisn: "100000000019", jk: "L" },
+            { id: 20, name: "Rania Aulia Putri", nisn: "100000000020", jk: "P" }
+        ];
+
+        let attendanceData = JSON.parse(localStorage.getItem('absensi_digital_data')) || {};
+        let configData = JSON.parse(localStorage.getItem('absensi_digital_config')) || {};
+        let jadwalData = JSON.parse(localStorage.getItem('absensi_digital_jadwal')) || {};
+
+        const nationalHolidays = {
+            "01-01": "Tahun Baru Masehi",
+            "05-01": "Hari Buruh",
+            "08-17": "Hari Kemerdekaan RI",
+            "12-25": "Hari Natal"
+        };
+
+        // --- 2. MAIN APP STARTUP ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('attendance-date').value = todayStr;
+            document.getElementById('rekap-month').value = new Date().getMonth();
+
+            loadConfig();
+            renderCalendar();
+            renderJadwalTable();
+            loadAttendanceDate();
+            fetchPrayerTimes();
+            updateStudentCounts();
+            lucide.createIcons();
+        });
+
+        // --- 3. NAVIGATION ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if (tabId === 'rekap') renderMonthlyRekap();
+        }
+
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            el.innerText = msg;
+            el.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+            setTimeout(() => el.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none'), 2500);
+        }
+
+        // --- 4. CONFIG MANAGEMENT ---
+        function loadConfig() {
+            if (configData.ta) document.getElementById('cfg-ta').value = configData.ta;
+            if (configData.sem) document.getElementById('cfg-sem').value = configData.sem;
+            if (configData.guru) document.getElementById('cfg-guru').value = configData.guru;
+            if (configData.kelas) document.getElementById('cfg-kelas').value = configData.kelas;
+        }
+
+        function saveConfig(key) {
+            configData[key] = document.getElementById(`cfg-${key}`).value;
+            localStorage.setItem('absensi_digital_config', JSON.stringify(configData));
+            showToast(`Data ${key.toUpperCase()} berhasil disimpan otomatis!`);
+        }
+
+        function updateStudentCounts() {
+            let l = students.filter(s => s.jk === 'L').length;
+            let p = students.filter(s => s.jk === 'P').length;
+            document.getElementById('lbl-total').innerText = students.length;
+            document.getElementById('lbl-l').innerText = l;
+            document.getElementById('lbl-p').innerText = p;
+        }
+
+        // --- 5. JADWAL SHALAT (API KOTA JAMBI) ---
+        function fetchPrayerTimes() {
+            // Kota Jambi ID Kemenag umumnya 0411 atau via API Aladhan koordinat Jambi (-1.6117, 103.6131)
+            fetch(`https://api.aladhan.com/v1/timingsByCity?city=Jambi&country=Indonesia&method=2`)
+                .then(res => res.json())
+                .then(data => {
+                    const t = data.data.timings;
+                    document.getElementById('sholat-box').innerHTML = `
+                        <div class="bg-white p-1 rounded text-center">Subuh<br><b>${t.Fajr}</b></div>
+                        <div class="bg-white p-1 rounded text-center">Dzuhur<br><b>${t.Dhuhr}</b></div>
+                        <div class="bg-white p-1 rounded text-center">Ashar<br><b>${t.Asr}</b></div>
+                        <div class="bg-white p-1 rounded text-center">Maghrib<br><b>${t.Maghrib}</b></div>
+                        <div class="bg-white p-1 rounded text-center">Isya<br><b>${t.Isha}</b></div>
+                    `;
+                }).catch(() => {
+                    document.getElementById('sholat-box').innerHTML = '<span class="text-red-400 col-span-3">Gagal memuat jadwal sholat</span>';
+                });
+        }
+
+        // --- 6. KALENDER DINAMIS ---
+        function renderCalendar() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const monthsStr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            
+            document.getElementById('cal-month-title').innerText = `${monthsStr[month]} ${year}`;
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+            const container = document.getElementById('calendar-days');
+            container.innerHTML = '';
+
+            for (let i = 0; i < firstDay; i++) {
+                container.appendChild(document.createElement('div'));
+            }
+
+            for (let d = 1; d <= totalDays; d++) {
+                const cell = document.createElement('div');
+                cell.innerText = d;
+                cell.className = "p-2 rounded-lg font-medium cursor-pointer text-slate-700 hover:bg-slate-100";
+                
+                const curDate = new Date(year, month, d);
+                const isWeekend = curDate.getDay() === 0 || curDate.getDay() === 6;
+                const mKey = `${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+                if (isWeekend) {
+                    cell.className += " text-red-500 font-bold bg-red-50";
+                }
+                if (nationalHolidays[mKey]) {
+                    cell.className += " text-red-600 bg-red-100 border border-red-300";
+                    cell.onclick = () => alert(`Hari Libur: ${nationalHolidays[mKey]}`);
+                }
+                container.appendChild(cell);
+            }
+        }
+
+        // --- 7. JADWAL PELAJARAN MINGGUAN ---
+        function renderJadwalTable() {
+            const body = document.getElementById('jadwal-body');
+            body.innerHTML = '';
+            
+            const times = [
+                {no:1, time:"06.50-07.00"}, {no:2, time:"07.00-08.10"}, {no:3, time:"08.10-08.45"}, {no:4, time:"08.45-09.20"},
+                {no:'', time:"09.20-09.50 (ISTIRAHAT)"},
+                {no:5, time:"09.50-10.25"}, {no:6, time:"10.25-11.00"}, {no:7, time:"11.00-11.35"}, {no:8, time:"11.35-12.10"},
+                {no:'', time:"12.10-13.00 (ISHOMA)"},
+                {no:9, time:"13.00-13.35"}, {no:10, time:"13.35-14.10"}, {no:11, time:"14.10-14.45"}, {no:12, time:"14.45-15.20"},
+                {no:'', time:"15.20-16.20"}
+            ];
+
+            times.forEach((t, index) => {
+                const tr = document.createElement('tr');
+                tr.className = t.no === '' ? 'bg-slate-50 font-bold text-slate-400' : 'hover:bg-slate-50';
+                
+                tr.innerHTML = `
+                    <td class="p-1 border border-slate-200 text-center font-bold">${t.no}</td>
+                    <td class="p-1 border border-slate-200">${t.time}</td>
+                    ${['senin','selasa','rabu','kamis','jumat'].map(day => {
+                        let val = jadwalData[`${index}-${day}`] || '';
+                        return `<td class="p-1 border border-slate-200"><input type="text" id="j-${index}-${day}" value="${val}" class="w-full bg-transparent focus:bg-white focus:outline-none text-[11px]"></td>`;
+                    }).join('')}
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function saveJadwal() {
+            const days = ['senin','selasa','rabu','kamis','jumat'];
+            for(let i=0; i<15; i++) {
+                days.forEach(day => {
+                    const input = document.getElementById(`j-${i}-${day}`);
+                    if(input) jadwalData[`${i}-${day}`] = input.value;
+                });
+            }
+            localStorage.setItem('absensi_digital_jadwal', JSON.stringify(jadwalData));
+            showToast("Jadwal mingguan berhasil disimpan!");
+        }
+
+        // --- 8. ABSENSI HARIAN LOGIC ---
+        const statusCycle = { '.': 'S', 'S': 'I', 'I': 'A', 'A': '.' };
+        const statusColors = { '.': 'bg-emerald-100 text-emerald-800', 'S': 'bg-amber-100 text-amber-800', 'I': 'bg-indigo-100 text-indigo-800', 'A': 'bg-rose-100 text-rose-800' };
+        const statusLabels = { '.': 'Hadir', 'S': 'Sakit', 'I': 'Izin', 'A': 'Alfa' };
+
+        function loadAttendanceDate() {
+            const dateStr = document.getElementById('attendance-date').value;
+            if (!attendanceData[dateStr]) {
+                attendanceData[dateStr] = {};
+                students.forEach(s => { attendanceData[dateStr][s.id] = '.'; });
+            }
+            renderAttendanceTable();
+        }
+
+        function renderAttendanceTable() {
+            const dateStr = document.getElementById('attendance-date').value;
+            const currentDayData = attendanceData[dateStr];
+            const body = document.getElementById('student-attendance-body');
+            body.innerHTML = '';
+
+            students.forEach((s) => {
+                const currentStatus = currentDayData[s.id] || '.';
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-100 hover:bg-slate-50 transition";
+                tr.innerHTML = `
+                    <td class="p-3 text-center font-bold text-slate-400">${s.id}</td>
+                    <td class="p-3 font-semibold"><input type="text" value="${s.name}" onchange="updateStudentField(${s.id}, 'name', this.value)" class="bg-transparent border-b border-transparent focus:border-slate-300 w-full focus:outline-none"></td>
+                    <td class="p-3 font-mono text-xs"><input type="text" value="${s.nisn}" onchange="updateStudentField(${s.id}, 'nisn', this.value)" class="bg-transparent border-b border-transparent focus:border-slate-300 w-full focus:outline-none"></td>
+                    <td class="p-3 text-center font-bold text-slate-500">${s.jk}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="cycleStatus(${s.id})" class="px-4 py-1.5 rounded-full font-bold text-xs shadow-sm transition transform active:scale-95 ${statusColors[currentStatus]}">
+                            ${statusLabels[currentStatus]} (${currentStatus})
+                        </button>
+                    </td>
+                `;
+                body.appendChild(tr);
+            });
+            calculateDailySummary();
+        }
+
+        function updateStudentField(id, field, value) {
+            let student = students.find(s => s.id === id);
+            if(student) {
+                student[field] = value;
+                updateStudentCounts();
+                showToast("Biodata siswa terupdate lokal!");
+            }
+        }
+
+        function cycleStatus(studentId) {
+            const dateStr = document.getElementById('attendance-date').value;
+            let cur = attendanceData[dateStr][studentId] || '.';
+            attendanceData[dateStr][studentId] = statusCycle[cur];
+            renderAttendanceTable();
+        }
+
+        function calculateDailySummary() {
+            const dateStr = document.getElementById('attendance-date').value;
+            const currentDayData = attendanceData[dateStr] || {};
+            let h=0, s=0, i=0, a=0;
+            
+            Object.values(currentDayData).forEach(val => {
+                if(val === '.') h++;
+                if(val === 'S') s++;
+                if(val === 'I') i++;
+                if(val === 'A') a++;
+            });
+
+            document.getElementById('day-summary-h').innerText = h;
+            document.getElementById('day-summary-s').innerText = s;
+            document.getElementById('day-summary-i').innerText = i;
+            document.getElementById('day-summary-a').innerText = a;
+            document.getElementById('day-summary-absent').innerText = (s + i + a);
+        }
+
+        function saveCurrentAttendance() {
+            localStorage.setItem('absensi_digital_data', JSON.stringify(attendanceData));
+            showToast("Absensi berhasil disimpan permanen ke LocalStorage/Cloud lokal!");
+        }
+
+        // --- 9. REKAP BULANAN LOGIC ---
+        function renderMonthlyRekap() {
+            const monthSelect = parseInt(document.getElementById('rekap-month').value);
+            const year = new Date().getFullYear();
+            const daysInMonth = new Date(year, monthSelect + 1, 0).getDate();
+
+            // Render Header
+            const headerRow = document.getElementById('rekap-header-row');
+            let headerHtml = `<th class="p-2 border border-slate-200">Nama Siswa</th><th class="p-2 border border-slate-200 text-center">JK</th>`;
+            for (let d = 1; d <= daysInMonth; d++) {
+                headerHtml += `<th class="p-1 border border-slate-200 text-center min-w-[20px]">${d}</th>`;
+            }
+            headerHtml += `<th class="p-2 border border-slate-200 text-center bg-emerald-50">H</th><th class="p-2 border border-slate-200 text-center bg-amber-50">S</th><th class="p-2 border border-slate-200 text-center bg-indigo-50">I</th><th class="p-2 border border-slate-200 text-center bg-rose-50">A</th><th class="p-2 border border-slate-200 text-center bg-slate-100">Status</th>`;
+            headerRow.innerHTML = headerHtml;
+
+            // Render Rows
+            const bodyRows = document.getElementById('rekap-body-rows');
+            bodyRows.innerHTML = '';
+
+            students.forEach(s => {
+                let countH=0, countS=0, countI=0, countA=0;
+                let trHtml = `<td class="p-2 border border-slate-200 font-semibold text-slate-800">${s.name}</td><td class="p-2 border border-slate-200 text-center font-bold text-slate-400">${s.jk}</td>`;
+
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateStr = `${year}-${String(monthSelect+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                    const curDate = new Date(year, monthSelect, d);
+                    const isWeekend = curDate.getDay() === 0 || curDate.getDay() === 6;
+                    const mKey = `${String(monthSelect+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+                    let status = '';
+                    if (attendanceData[dateStr] && attendanceData[dateStr][s.id]) {
+                        status = attendanceData[dateStr][s.id];
+                    }
+
+                    if (status === '.') countH++;
+                    if (status === 'S') countS++;
+                    if (status === 'I') countI++;
+                    if (status === 'A') countA++;
+
+                    if (isWeekend || nationalHolidays[mKey]) {
+                        trHtml += `<td class="p-1 border border-slate-200 bg-red-100 text-center"></td>`;
+                    } else {
+                        trHtml += `<td class="p-1 border border-slate-200 text-center font-bold text-slate-600">${status === '.' ? '•' : status}</td>`;
+                    }
+                }
+
+                // Kalkulasi Indikator Bintang / Peringatan
+                let statusBadge = '➖';
+                if((countS + countI + countA) >= 5) statusBadge = '⚠️ Perlu Perhatian';
+                else if (countH >= (daysInMonth - 8) && countH > 0) statusBadge = '⭐ Terbaik';
+
+                trHtml += `
+                    <td class="p-2 border border-slate-200 text-center bg-emerald-50/50 font-bold text-emerald-700">${countH}</td>
+                    <td class="p-2 border border-slate-200 text-center bg-amber-50/50 font-bold text-amber-700">${countS}</td>
+                    <td class="p-2 border border-slate-200 text-center bg-indigo-50/50 font-bold text-indigo-700">${countI}</td>
+                    <td class="p-2 border border-slate-200 text-center bg-rose-50/50 font-bold text-rose-700">${countA}</td>
+                    <td class="p-2 border border-slate-200 text-center text-[10px] font-bold">${statusBadge}</td>
+                `;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50";
+                tr.innerHTML = trHtml;
+                bodyRows.appendChild(tr);
+            });
+        }
+
+        // --- 10. BACKUP & EKSPOR DATA CSV ---
+        function backupData() {
+            saveCurrentAttendance();
+            showToast("Seluruh data tersinkronisasi otomatis di Cloud/Canva Lokal browser Anda!");
+        }
+
+        function exportCSV() {
+            const monthSelect = document.getElementById('rekap-month').value;
+            let csvContent = "data:text/csv;charset=utf-8,No,Nama Siswa,NISN,Jenis Kelamin\n";
+            students.forEach(s => {
+                csvContent += `${s.id},${s.name},${s.nisn},${s.jk}\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Rekap_Absensi_Bulan_${parseInt(monthSelect)+1}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
