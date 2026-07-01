@@ -1,3 +1,68 @@
+Conversation with Gemini
+buatkan kode html lengkapnya: 
+Buat aplikasi web "Absensi Digital" menggunakan HTML, Tailwind CSS, dan JavaScript dalam satu file bisa edit dan data bisa disimpan dan dibuka kapanpun. Tempat penyimpanan bisa di local canva atau di drive drive elita20@guru.sd.belajar.id.
+Persyaratan:
+1.	Buat halaman Cover yang berisi data sekolah:
+-	Logo sekolah
+-	Judul "Absensi Digital Kelas Buel"
+-	Nama sekolah: SD Islam Al Falah Jambi
+-	Nama Kepala Sekolah
+-	Tahun ajaran: 2026/2027 (bisa edit kapan saja dan ada tombol save di setiap data bisa edit)
+-	Semester: ... (bisa edit kapan saja dan ada tombol save di setiap data bisa edit) – 
+-	Nama guru: Elita, S.Pd. (bisa edit kapan saja dan ada tombol save di setiap data bisa edit)
+-	Nama kelas: ... (bisa edit kapan saja dan ada tombol save di setiap data bisa edit) – 
+-	Jumlah siswa: ..(bisa edit kapan saja dan ada tombol save di setiap data bisa edit) – 
+-	Jumlah siswa laki-laki: (update bisa edit kapan saja dan ada tombol save di setiap data bisa edit)
+-	Jumlah siswa perempuan: (update bisa edit kapan saja dan ada tombol save di setiap data bisa edit)
+2.	Tambahkan menu navigasi tombol bulat warna warni pastel soft:
+-	Cover
+-	Absensi Harian (Ketika diklik masusk ke halaman Absensi Harian bisa edit dan simpan data)
+-	Rekap Bulanan (Ketika diklik masusk ke halaman Rekap Bulanan bisa edit dan simpan data)
+-	Simpan (update penyimpanan di drive atau di sheet canva update setiap kali menyimpan data yang diedit tersimpan walau keluar web tetap tersimpan)
+3.	Buat halaman:
+-	Absensi Harian: - Pilihan bulan - Pilihan tanggal update Kalender otomatis- Daftar siswa - Nomor urut 1-20 - Nama siswa - Jenis Kelamin - NISN (
+-	No	Nama Siswa	NISN	Jenis Kelamin
+1	Ahmad Fauzan	100000000001	L
+2	Aisyah Putri	100000000002	P
+3	Alvaro Pratama	100000000003	L
+4	Bintang Ramadhan	100000000004	L
+5	Citra Aulia	100000000005	P
+6	Daffa Prakoso	100000000006	L
+7	Farhan Maulana	100000000007	L
+8	Intan Safira	100000000008	P
+9	Kayla Zahra	100000000009	P
+10	Muhammad Rafi	100000000010	L
+11	Nabila Azzahra	100000000011	P
+12	Nayla Humaira	100000000012	P
+13	Rizky Maulana	100000000013	L
+14	Salsaabila Putri	100000000014	P
+15	Syifa Nurhaliza	100000000015	P
+16	Yusuf Ramadhan	100000000016	L
+17	Zahra Khairunnisa	100000000017	P
+18	Zidan Alfarizi	100000000018	L
+19	Fathan Arsyad	100000000019	L
+20	Rania Aulia Putri	100000000020	P)
+(data nama, nisn, jenis kelamin siswa editable dan tersimpan) - Status kehadiran 4. Status kehadiran harus dapat diklik secara bergantian: - Hadir (.)- Sakit (s) - Izin (i)- Alfa (a)- Simpan data absensi secara otomatis menggunakan Data SDK atau Local Storage (drive elita20@guru.sd.belajar.id) atau canva. Tampilkan ringkasan harian: - Jumlah Hadir - Jumlah Sakit - Jumlah Izin - Jumlah Alfa dan total jumlah sakit, izin, alfa. Buat grafik persentase kehadiran bulanan.
+4.	Buat halaman Rekap Bulanan: - Tabel kehadiran setiap tanggal (Kalender otomatis update hari sabtu dan minggu serta libur nasional dan libur keagamaan kolom berwarna merah tidak bisa diisi- Total Hadir - Total Sakit - Total Izin - Total Alfa - Jumlah Kehadiran - Persentase Ketidakhadiran (Sakit (s) - Izin (i)- Alfa (a)- Simpan data absensi secara otomatis menggunakan Data SDK atau Local Storage (drive elita20@guru.sd.belajar.id) atau canva) - Penanda Bintang siswa dengan persentase kehadiran terbaik dan warning peringatan siswa yang sering sakit, izin, alfa.
+5.	Ada fitur jadwal salat otomatis update wilayah kota jambi
+6.	Tambahkan fitur:
+-	Cetak Rekap Bulanan (otomatis bisa diprint terhubung ke printer yang terhubung atau save pdf
+-	Unduh Rekap Bulanan ke CSV/pdf bisa edit bisa unduh Ketika dklik tersimpan ke device atau ke downloadan atau ke drive elita20@guru.sd.belajar.id
+7.	Halaman Cover di bawah data sekolah tampilkan:
+-	Kalender bulan berjalan fitur Kalender otomatis terbaru update dan hari sabtu dan minggu tanggalan berwarna merah serta hari besar nasionalnya Ketika diklik tanggal merah muncul keterangan nama hari besarnya.
+-	Jadwal pelajaran mingguan 15 baris 7 kolom: kolom pertama: nomor/baris 1-4, 1 baris kosong, lanjut nomor/baris 5-8, 1 baris kosong lagi, lanjut baris/nomor 9-12. kolom kedua Alokasi waktu: baris 1-4= 1. 06.50-07.00 2. 07.00-08.10 3. 08.10-08.45 4. Baris kosong diisi di kolom kedua tanpa nomor 08.45 – 09.20 lanjut baris atau nomor 5-8= 5. 09.50-10.25 6. 10.25-11.00 7. 11.00-11-35 8. 11.35 – 12.10 baris nomor kosong diisi kolom alokasi dengan 12.00-13.00 lanjut baris atau nomor 9-12= 9. 13.00-13.35 10. 13.35 – 14.10 11. 14.10-14.45 12. 14.45- 15.20 dan baris terakahir nomor baris kosongkan isi kolom alokasi waktu 15.20 – 16.20. kolom ketiga: Senin, keempat= Selasa kelima= Rabu keenam= kamis ketujuh Jumat kolom keempat sampai ketujuh otomatis bisa edit dengan jadwal Pelajaran yang akan diinput dan otomatis tersimpan atau klik tombol simpan otomatis tersimpan ke penyimpanan Ketika ditutup dan dibuka plikasi tersimpan dan bisa dipanggil tidak terhapus atau hilang atau berubah tanpa diedit.
+8.	Gunakan desain modern: - Warna pastel - Rounded card - Responsive – editable- simpan otomatis- Font Fredoka dan Baloo - Ikon Lucide - Efek hover dan animasi halus Pastikan seluruh aplikasi responsif untuk desktop, tablet, dan ponsel. Buat tombol navigasi yang berfungsi sesuai kebutuhan.Gunakan struktur kode yang rapi, mudah dibaca, dan diberi komentar. Hasil akhir berupa satu file HTML lengkap yang siap digunakan tanpa instalasi tambahan editable dan otomatis tersimpan di cloud, drive atau penyimpanan local canva.
+9.	File atau web bisa disematkan di desktop, tablet, ponsel.
+10.	Logo sekolah (file disertakan)
+11.	Gambar latar transparan dan di beri gambar dasar (file disertakan)
+
+Berikut adalah kode HTML lengkap dalam satu file yang menggabungkan seluruh persyaratan Anda: desain modern bertema pastel, penggunaan font Fredoka & Baloo, ikon dari Lucide Icons, fitur Local Storage (agar data otomatis tersimpan di browser Anda/Canva lokal), penanganan otomatis data siswa, kalender dinamis, jadwal pelajaran, rekap bulanan dengan penanda bintang/peringatan, serta fitur jadwal salat otomatis untuk wilayah Kota Jambi.
+
+Karena aplikasi berbasis single-file web app yang berjalan mandiri, penyimpanan awan langsung ke Google Drive membutuhkan otentikasi API yang kompleks (OAuth2). Oleh karena itu, sistem ini memaksimalkan LocalStorage yang otomatis menyimpan setiap perubahan secara real-time (walau web ditutup/keluar data tidak hilang), dan dilengkapi tombol Ekspor/Impor Data untuk mencadangkan file data secara manual ke Drive Anda.
+
+Silakan salin seluruh kode di bawah ini dan simpan dengan ekstensi .html (misal: absensi_digital.html).
+
+HTML
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -583,3 +648,16 @@
     </script>
 </body>
 </html>
+Keunggulan Fitur Aplikasi Ini:
+Penyimpanan Cloud Lokal Berkelanjutan: Data tersimpan otomatis di LocalStorage perangkat Anda atau integrasi canvas/sandbox lokal tempat ia di-host. Data Anda akan tetap ada sekalipun aplikasi ditutup.
+
+Fleksibilitas Pengeditan: Seluruh data krusial seperti identitas siswa, tahun ajaran, nama kelas, guru, serta tabel jadwal pelajaran mingguan dapat diedit secara langsung secara instan.
+
+Automasi Cerdas Jambi: Jadwal salat diperbarui secara dinamis langsung dari wilayah Kota Jambi menggunakan integrasi REST API terbuka.
+
+Visual & Cetak Ramah Pengguna: Memakai CSS Grid modern dan sistem pencetakan yang otomatis menyembunyikan tombol navigasi (no-print) saat mencetak langsung ke kertas fisik atau dikonversi menjadi file PDF.
+
+
+
+Sharing 2 tabs
+Skip to the latest Gemini result
